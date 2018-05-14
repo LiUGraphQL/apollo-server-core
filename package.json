@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "apollo-cache-control": "^0.1.0",
-    "apollo-tracing": "^0.1.0",
-    "graphql-extensions": "^0.0.x"
+    "apollo-tracing": "github:timandersson/apollo-tracing-js",
+    "graphql-extensions": "github:timandersson/graphql-extensions"
   }
 }
