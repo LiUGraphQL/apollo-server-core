@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var graphql_1 = require("graphql");
 var _ValidationContext = require("graphql");
 var _TypeInfo = require("graphql");
+var queryCalculator = require("graphql-query-calculator");
 var graphql_extensions_1 = require("graphql-extensions");
 var apollo_tracing_1 = require("apollo-tracing");
 var apollo_cache_control_1 = require("apollo-cache-control");
@@ -117,19 +118,14 @@ function doRunQuery(options) {
         });
     }
 
-    var promise1 = new Promise(function(resolve, reject) {
-      setTimeout(resolve, 1000, 'foo');
-    });
-
-
     try {
         if (extensionStack) {
             extensionStack.calculationDidStart();
         }
         let typeinfo = new _TypeInfo.TypeInfo(options.schema);
         let valcontext = new _ValidationContext.ValidationContext(options.schema, documentAST, typeinfo);
-      
-        return promise1.then(() => {
+
+        return queryCalculator(context, 10000, valcontext).then(() => {
         if (extensionStack) {
             extensionStack.calculationDidEnd();
             extensionStack.executionDidStart();
