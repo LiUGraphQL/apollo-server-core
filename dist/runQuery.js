@@ -124,37 +124,38 @@ function doRunQuery(options) {
         }
         let typeinfo = new _TypeInfo.TypeInfo(options.schema);
         let valcontext = new _ValidationContext.ValidationContext(options.schema, documentAST, typeinfo);
-
-        return queryCalculator(context, 10000, valcontext).then(() => {
-        if (extensionStack) {
-            extensionStack.calculationDidEnd();
-            extensionStack.executionDidStart();
-        }
-
-        logFunction({ action: LogAction.execute, step: LogStep.start });
-        return Promise.resolve(graphql_1.execute(options.schema, documentAST, options.rootValue, context, options.variables, options.operationName, options.fieldResolver)).then(function (result) {
-            logFunction({ action: LogAction.execute, step: LogStep.end });
-            logFunction({ action: LogAction.request, step: LogStep.end });
-            var response = {
-                data: result.data,
-            };
-            if (result.errors) {
-                response.errors = format(result.errors, options.formatError);
-                if (debug) {
-                    result.errors.map(printStackTrace);
-                }
+        return queryCalculator(context, 10000, valcontext).then(valcontext => {
+            if(valcontext.getErrors().length){
+                return Promise.resolve({ errors: format(valcontext.getErrors()) });
             }
             if (extensionStack) {
-                extensionStack.executionDidEnd();
-                extensionStack.requestDidEnd();
-                response.extensions = extensionStack.format();
+                extensionStack.calculationDidEnd();
+                extensionStack.executionDidStart();
             }
-            if (options.formatResponse) {
-                response = options.formatResponse(response, options);
-            }
-            return response;
+            logFunction({ action: LogAction.execute, step: LogStep.start });
+            return Promise.resolve(graphql_1.execute(options.schema, documentAST, options.rootValue, context, options.variables, options.operationName, options.fieldResolver)).then(function (result) {
+                logFunction({ action: LogAction.execute, step: LogStep.end });
+                logFunction({ action: LogAction.request, step: LogStep.end });
+                var response = {
+                    data: result.data,
+                };
+                if (result.errors) {
+                    response.errors = format(result.errors, options.formatError);
+                    if (debug) {
+                        result.errors.map(printStackTrace);
+                    }
+                }
+                if (extensionStack) {
+                    extensionStack.executionDidEnd();
+                    extensionStack.requestDidEnd();
+                    response.extensions = extensionStack.format();
+                }
+                if (options.formatResponse) {
+                    response = options.formatResponse(response, options);
+                }
+                return response;
+            });
         });
-      });
     }
     catch (executionError) {
         logFunction({ action: LogAction.execute, step: LogStep.end });
