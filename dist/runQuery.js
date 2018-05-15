@@ -115,6 +115,10 @@ function doRunQuery(options) {
         });
     }
     if (extensionStack) {
+        extensionStack.calculationDidStart();
+    }
+    if (extensionStack) {
+        extensionStack.calculationDidEnd();
         extensionStack.executionDidStart();
     }
     try {
