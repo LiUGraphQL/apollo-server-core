@@ -183,16 +183,8 @@ function doRunQuery(options: QueryOptions): Promise<GraphQLResponse> {
       errors: format(validationErrors, options.formatError),
     });
   }
-  if (extensionStack) {
-    extensionStack.calculationDidStart();
-  }
-
-  /**
-   *  PUT CALC HERE
-   */
 
   if (extensionStack) {
-    extensionStack.calculationDidEnd();
     extensionStack.executionDidStart();
   }
 
