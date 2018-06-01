@@ -124,7 +124,9 @@ function doRunQuery(options) {
         }
         let typeinfo = new _TypeInfo.TypeInfo(options.schema);
         let valcontext = new _ValidationContext.ValidationContext(options.schema, documentAST, typeinfo);
-        return queryCalculator(context, 10000, valcontext).then(valcontext => {
+
+        //Threshold set to 10000000
+        return queryCalculator(context, 10000000, valcontext).then(valcontext => {
             if(valcontext.getErrors().length){
                 return Promise.resolve({ errors: format(valcontext.getErrors()) });
             }
