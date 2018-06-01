@@ -34,7 +34,7 @@
     "apollo-cache-control": "^0.1.0",
     "apollo-tracing": "^0.1.0",
     "graphql-extensions": "^0.0.x",
-    "graphql-query-calculator": "github:timandersson/graphql-query-calculator"
+    "graphql-query-calculator": "github:LiUGraphQL/graphql-query-calculator"
   },
   "deprecated": false,
   "description": "Core engine for Apollo GraphQL server",
