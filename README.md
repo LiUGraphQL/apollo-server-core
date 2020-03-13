@@ -4,4 +4,4 @@ This repo contains a version of [apollo-server-core](https://github.com/apollogr
 
 *Note: If you are here to find the implementation that Tim Andersson has used for his Bachelor thesis ([Result size calculation for Facebook's GraphQL query language](http://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-150026)), switch to the [TimAndersson branch](https://github.com/LiUGraphQL/apollo-server-core/tree/TimAndersson).*
 
-We have used this extension in a [GraphQL server created for experiments](https://github.com/LiUGraphQL/experiment-tim).
+We have used this extension in a [GraphQL server created for experiments](https://github.com/LiUGraphQL/graphql-result-size-experiment).
