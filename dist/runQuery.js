@@ -187,7 +187,6 @@ function doRunQuery(options) {
                     if (options.formatResponse) {
                         response = options.formatResponse(response, options);
                     }
-                    console.log(response);
                     return response;
                 });
             }
