@@ -4,6 +4,7 @@ var graphql_1 = require("graphql");
 var _ValidationContext = require("graphql");
 var _TypeInfo = require("graphql");
 var sizeCalculator = require("graphql-result-size");
+var loaders = require('../../../loaders');
 var graphql_extensions_1 = require("graphql-extensions");
 var apollo_tracing_1 = require("apollo-tracing");
 var apollo_cache_control_1 = require("apollo-cache-control");
@@ -124,9 +125,10 @@ function doRunQuery(options) {
         }
         let typeinfo = new _TypeInfo.TypeInfo(options.schema);
         let valcontext = new _ValidationContext.ValidationContext(options.schema, documentAST, typeinfo);
+        let contextLoaders = loaders.createLoaders();
 
         //Threshold set to 10000000
-        return Promise.resolve(sizeCalculator.queryCalculator(context, 10000000, valcontext, options, format))
+        return Promise.resolve(sizeCalculator.queryCalculator(contextLoaders, 10000000, valcontext, options, format))
         .then((data) => {
             const results = data.results;
             const valcon = data.validationContext;
