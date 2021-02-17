@@ -133,12 +133,13 @@ function doRunQuery(options) {
             const results = data.results;
             const valcon = data.validationContext;
             const index = data.index;
-            if(valcon.getErrors().length){
-                return Promise.resolve({ errors: format(valcon.getErrors()) });
-            }
             if (extensionStack) {
                 extensionStack.calculationDidEnd();
                 extensionStack.executionDidStart();
+            }
+            if(valcon.getErrors().length){
+                logFunction({ action: LogAction.request, step: LogStep.end });
+                return createResponse(null, valcon.getErrors(), extensionStack, options, debug);
             }
             logFunction({ action: LogAction.execute, step: LogStep.start });
             if (results !== null) {
@@ -148,48 +149,14 @@ function doRunQuery(options) {
                     const res = JSON.parse(stringRes);
                     logFunction({ action: LogAction.execute, step: LogStep.end });
                     logFunction({ action: LogAction.request, step: LogStep.end });
-                    var response = {
-                        data: res.data,
-                    };
-                    if (res.errors) {
-                        response.errors = format(res.errors, options.formatError);
-                        if (debug) {
-                            res.errors.map(printStackTrace);
-                        }
-                    }
-                    if (extensionStack) {
-                        extensionStack.executionDidEnd();
-                        extensionStack.requestDidEnd();
-                        response.extensions = extensionStack.format();
-                    }
-                    if (options.formatResponse) {
-                        response = options.formatResponse(response, options);
-                    }
-                    return response;
+                    return createResponse(res.data, res.errors, extensionStack, options, debug);
                 });
             } else {
                 return Promise.resolve(graphql_1.execute(options.schema, documentAST, options.rootValue, context, options.variables, options.operationName, options.fieldResolver))
                 .then(function (result) {
                     logFunction({ action: LogAction.execute, step: LogStep.end });
                     logFunction({ action: LogAction.request, step: LogStep.end });
-                    var response = {
-                        data: result.data,
-                    };
-                    if (result.errors) {
-                        response.errors = format(result.errors, options.formatError);
-                        if (debug) {
-                            result.errors.map(printStackTrace);
-                        }
-                    }
-                    if (extensionStack) {
-                        extensionStack.executionDidEnd();
-                        extensionStack.requestDidEnd();
-                        response.extensions = extensionStack.format();
-                    }
-                    if (options.formatResponse) {
-                        response = options.formatResponse(response, options);
-                    }
-                    return response;
+                    return createResponse(result.data, result.errors, extensionStack, options, debug);
                 });
             }
         });
@@ -201,5 +168,26 @@ function doRunQuery(options) {
             errors: format([executionError], options.formatError),
         });
     }
+}
+function createResponse(data, errors, extensionStack, options, debug) {
+    var response = {}
+    if (data !== null) {
+        response.data = data;
+    }
+    if (errors) {
+        response.errors = format(errors, options.formatError);
+        if (debug) {
+            errors.map(printStackTrace);
+        }
+    }
+    if (extensionStack) {
+        extensionStack.executionDidEnd();
+        extensionStack.requestDidEnd();
+        response.extensions = extensionStack.format();
+    }
+    if (options.formatResponse) {
+        response = options.formatResponse(response, options);
+    }
+    return response;
 }
 //# sourceMappingURL=runQuery.js.map
